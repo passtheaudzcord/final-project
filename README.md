@@ -5,7 +5,7 @@ OceanQuest
 ## A wireframe using Figma, DrawIO, etc.
 ![image](https://github.com/user-attachments/assets/42853a28-1d05-4d5a-bfa5-12b019f10e5f)
 ![image](https://github.com/user-attachments/assets/2b6c7151-564e-411a-a6d0-d1da812cf2be) 
-Ocean page would be the same as Animal page
+## Ocean page would be the same as Animal page and Plant page
 ![image](https://github.com/user-attachments/assets/a5d080be-f417-499c-bfdf-7ece474b18f5)
 ![image](https://github.com/user-attachments/assets/e6fd0d57-69ba-42bd-81c6-22bd07018251)
 
