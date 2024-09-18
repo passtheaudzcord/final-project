@@ -40,10 +40,10 @@ class Animal(db.Model, SerializerMixin):
     # ocean_id = db.Column(db.Integer, db.ForeignKey('oceans.id'))
     # img = db.Column(db.String)
 
-class Habitat(db.Model, SerializerMixin):
-    __tablename__ = "habitats"
-    animal_id = db.Column(db.Integer, db.ForeignKey('animals.id'))
-    ocean_id = db.Column(db.Integer, db.ForeignKey('oceans.id'))
+#class Habitat(db.Model, SerializerMixin):
+    #__tablename__ = "habitats"
+    #animal_id = db.Column(db.Integer, db.ForeignKey('animals.id'))
+    #ocean_id = db.Column(db.Integer, db.ForeignKey('oceans.id'))
 
 
 class User(db.Model, SerializerMixin):
