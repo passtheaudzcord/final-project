@@ -56,7 +56,25 @@ if __name__ == '__main__':
         user1 = User(username = 'achippy', password = '3564gfbd')
         user2 = User(username = 'budweiser', password = 'mdnsjs7')
 
-        favorite1 = Favorite()
+        favorite1 = Favorite(user_id=1, animal_id=1)
+        favorite2 = Favorite(user_id=1, animal_id=6)
+        favorite3 = Favorite(user_id=2, animal_id=19)
+        favorite4 = Favorite(user_id=2, animal_id=12)
+
+
+        db.session.add_all([
+            ocean1, ocean2, ocean3, ocean4, ocean5,
+            animal1, animal2, animal3, animal4, animal5, animal6, animal7, animal8, animal9, animal10,
+            animal11, animal12, animal13, animal14, animal15, animal16, animal17, animal18, animal19, animal20,
+            user1, user2,
+            favorite1, favorite2, favorite3, favorite4
+        ])
+
+        db.session.commit()
+
+        print("Seeding complete!")
+
+    
 
 
 

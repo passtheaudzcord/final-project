@@ -28,23 +28,6 @@ class Animal(db.Model, SerializerMixin):
     fun_fact = db.Column(db.String)
     food = db.Column(db.String)
     img = db.Column(db.String)
-    
-# class Plant(db.Model, SerializerMixin):
-    # __tablename__ = "plants"
-
-    # id = db.Column(db.Integer, primary_key=True)
-    # name = db.Column(db.String)
-    # scientific_name = (db.String)
-    #lifespan = db.Column(db.Integer)
-    # about = db.Column(db.String)
-    # ocean_id = db.Column(db.Integer, db.ForeignKey('oceans.id'))
-    # img = db.Column(db.String)
-
-#class Habitat(db.Model, SerializerMixin):
-    #__tablename__ = "habitats"
-    #animal_id = db.Column(db.Integer, db.ForeignKey('animals.id'))
-    #ocean_id = db.Column(db.Integer, db.ForeignKey('oceans.id'))
-
 
 class User(db.Model, SerializerMixin):
     __tablename__ = "users"
@@ -70,3 +53,4 @@ class Favorite(db.Model, SerializerMixin):
 
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
+    animal_id = db.Column(db.Integer, db.ForeignKey('animals.id'))
