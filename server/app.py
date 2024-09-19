@@ -27,7 +27,7 @@ api.add_resource(AllOceans, '/oceans')
 class AllAnimals(Resource):
     def get(self):
         animals = Animal.query.all()
-        animals_list = [animal.to_dict(only=('id', 'name', 'avg_depth', 'deepest_point', 'surface_area', 'about', 'ofun_fact', 'img', 'map')) for animal in animals]
+        animals_list = [animal.to_dict(only=('id', 'name', 'scientific_name', 'lifespan', 'about', 'fun_fact', 'food', 'img' )) for animal in animals]
         return make_response(animals_list, 200)
 
 api.add_resource(AllAnimals, '/animals')
@@ -76,7 +76,7 @@ api.add_resource(UserResource, '/users/<int:id>')
 class AllFavorites(Resource):
     def get(self):
         favs = Favorite.query.all()
-        favorites_list = [fav.to_dict(only=('id', 'name', 'avg_depth', 'deepest_point', 'surface_area', 'about', 'ofun_fact', 'img', 'map')) for fav in favs]
+        favorites_list = [fav.to_dict(only=('id', 'user_id', 'animal_id' )) for fav in favs]
         return make_response(favorites_list, 200)
 
 api.add_resource(AllFavorites, '/favorites')
