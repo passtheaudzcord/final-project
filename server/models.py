@@ -76,4 +76,4 @@ class Favorite(db.Model, SerializerMixin):
     users = db.relationship('User', back_populates ='favorite')
     animals = db.relationship('Animal', back_populates = 'favorite')
 
-    serialize_rules = ('-user.favorites', -'animals.favorites', )
+    serialize_rules = ('-user.favorites', '-animals.favorites', )
