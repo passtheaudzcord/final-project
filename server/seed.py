@@ -1,5 +1,5 @@
 from app import app
-from models import db, Ocean, Animal, Plant, User, Favorite # models go here
+from models import db, Ocean, Animal, User, Favorite # models go here
 from faker import Faker
 
 faker = Faker()
@@ -9,7 +9,6 @@ if __name__ == '__main__':
 
         Ocean.query.delete()
         Animal.query.delete()
-        Plant.query.delete()
         User.query.delete()
         
         print("Seeding database...")
@@ -53,8 +52,8 @@ if __name__ == '__main__':
         animal20 = Animal(name='Antarctic Fur Seals', scientific_name = 'Arctocephalus gazella', lifespan='Female: 25 years, Male: 15 years', about='Antarctic Fur Seals were almost hunted to extinction. They weigh from 90-215 kg, males being larger. Male Antarctic fur seals are much larger than females, with males weighing up to four times more than females. Adult males are dark brown in colour. Females and juveniles tend to be paler, almost grey with lighter undersides. Colour patterns are highly variable, and scientists reported that some hybridization between Subantarctic and Antarctic fur seals has occurred.', fun_fact = 'A small percentage of Antarctic fur seals are born with a rare genetic mutation that causes them to have white or blonde fur. Also, Antarctic fur seals can move around on all fours and travel up to 12.5 miles per hour on land.', food = ' Krill, squid, fish, penguins.', ocean = ocean5, img= 'https://www.antarctica.gov.au/site/assets/files/45617/rs34085_nh_furseal_4.1920x768.jpg' )
 
 
-        user1 = User(username = 'achippy', password = '3564gfbd')
-        user2 = User(username = 'budweiser', password = 'mdnsjs7')
+        user1 = User(username = 'achippy', _password_hash = '3564gfbd')
+        user2 = User(username = 'budweiser', _password_hash = 'mdnsjs7')
 
         favorite1 = Favorite(user_id=1, animal_id=1)
         favorite2 = Favorite(user_id=1, animal_id=6)

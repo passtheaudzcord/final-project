@@ -2,9 +2,8 @@ from flask import Flask, make_response, jsonify, request
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 from flask_restful import Resource, Api
-import datetime
 from models import Ocean, Animal, User, Favorite
-from config import db, api
+from config import db, api, app
 
 class AllOceans(Resource):
     def get(self):
