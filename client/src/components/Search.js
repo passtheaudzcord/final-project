@@ -23,7 +23,7 @@ function Search({ updateSearch }) {
       <input
         type="text"
         id="search"
-        placeholder="search free stuff"
+        placeholder="Search"
         value={form}
         onChange={(e) => handleChange(e)}
       />

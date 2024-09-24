@@ -1,61 +1,30 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import styled from "styled-components";
-import { Button } from "../styles";
 
-function NavBar({ user, setUser }) {
-  function handleLogoutClick() {
-    fetch("/logout", { method: "DELETE" }).then((r) => {
-      if (r.ok) {
-        setUser(null);
-      }
-    });
-  }
 
+function NavBar() {
   return (
-    <Wrapper>
-      <Logo>
-        <Link to="/">Reciplease</Link>
-        
-      </Logo>
-      <Nav>
-        <h1>Hi! {user.username}</h1>
-        <Button as={Link} to="/new">
-          New Recipe
-        </Button>
-        <Button variant="outline" onClick={handleLogoutClick}>
-          Logout
-        </Button>
-      </Nav>
-    </Wrapper>
+    <nav className="NavBar">
+      <ul>
+        <li>
+          <Link to="/">Home</Link>
+        </li>
+        <li>
+        <Link to="/oceans"> All Oceans </Link>
+        </li>
+        <li>
+        <Link to="/animals"> All Animals </Link>
+        </li>
+        <li>
+          <Link to="/user/new">Add User</Link>
+        </li>
+        <li>
+          <Link to="/user/delete">Delete User</Link>
+        </li>
+
+      </ul>
+    </nav>
   );
 }
-
-const Wrapper = styled.header`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  padding: 8px;
-`;
-
-const Logo = styled.h1`
-  font-family: "Permanent Marker", cursive;
-  font-size: 3rem;
-  color: deeppink;
-  margin: 0;
-  line-height: 1;
-
-  a {
-    color: inherit;
-    text-decoration: none;
-  }
-`;
-
-const Nav = styled.nav`
-  display: flex;
-  gap: 4px;
-  position: absolute;
-  right: 8px;
-`;
 
 export default NavBar;

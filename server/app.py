@@ -5,6 +5,10 @@ from flask_restful import Resource, Api
 from models import Ocean, Animal, User, Favorite
 from config import db, api, app
 
+@app.route('/')
+def index():
+    return '<h1>Hello World!</h1>'
+
 class AllOceans(Resource):
     def get(self):
         oceans = Ocean.query.all()
