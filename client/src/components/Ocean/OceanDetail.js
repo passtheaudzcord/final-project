@@ -2,29 +2,39 @@ import { useParams, Link, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 
 function OceanDetail() {
-    const [ocean, setOcean] = useState({
-        globalocean: []
-    });
+    const [ocean, setOcean] = useState(null);
+    const [relatedOceans, setRelatedOceans] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const params = useParams();
     const navigate = useNavigate();
 
     useEffect(() => {
+        // Fetch the specific ocean details
         fetch(`http://127.0.0.1:5555/ocean/${params.id}`)
             .then(res => {
                 if (!res.ok) {
-                    throw new Error("Failed to fetch ocean");
+                    throw new Error("Failed to fetch ocean details");
                 }
                 return res.json();
             })
             .then(data => {
                 setOcean(data);
+                return fetch("http://127.0.0.1:5555/oceans"); // Fetch related oceans
+            })
+            .then(res => {
+                if (!res.ok) {
+                    throw new Error("Failed to fetch related oceans");
+                }
+                return res.json();
+            })
+            .then(data => {
+                setRelatedOceans(data);
                 setLoading(false);
             })
             .catch(() => {
-                setError("Artist not found");
-                setLoading(false)
+                setError("Ocean not found");
+                setLoading(false);
             });
     }, [params.id, navigate]);
 
@@ -44,23 +54,23 @@ function OceanDetail() {
             <p>{about}</p>
             <div className="ocean-card">
                 <figure className="image">
-                    <img src={img || "default-image.jpg"} /> 
+                    <img src={img || "default-image.jpg"} alt={`${name} image`} />
                     <section>
                         <p>Average Depth: {avg_depth}</p>
                         <p>Deepest Point: {deepest_point}</p>
                         <p>Surface Area: {surface_area}</p>
                         <p>Fun Fact: {ofun_fact}</p>
-                        <p>Map: {map}</p>
+                        <p>Map: <a href={map} target="_blank" rel="noopener noreferrer">{map}</a></p>
                     </section>
                 </figure>
                 <section className="details">
-                    <h3>Global Ocean:</h3>
-                    <ul className="songs">
-                        {oceans.map((ocean) => (
+                    <h3>Related Oceans:</h3>
+                    <ul className="oceans-list">
+                        {relatedOceans.map(ocean => (
                             <li key={ocean.id}>
                                 <img
                                     width="100px"
-                                    src={ocean.img || "default-image.jpg"} 
+                                    src={ocean.img || "default-image.jpg"}
                                     alt={ocean.name}
                                 />
                                 <div className="ocean-member">
@@ -73,25 +83,6 @@ function OceanDetail() {
                     </ul>
                 </section>
             </div>
-
-            <section className="comments">
-                <h2>Submit your review!</h2>
-                <form onSubmit={handleCommentSubmit}>
-                    <textarea
-                        value={comment}
-                        onChange={handleCommentChange}
-                        placeholder="Add a comment"
-                        rows="4"
-                        style={{ width: "100%" }}
-                    />
-                    <button type="submit">Submit</button>
-                </form>
-                <ul>
-                    {comments.map((com, index) => (
-                        <li key={index}>{com}</li>
-                    ))}
-                </ul>
-            </section>
         </div>
     );
 }

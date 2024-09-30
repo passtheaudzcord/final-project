@@ -1,28 +1,42 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import { NavLink } from "react-router-dom";
+import Search from "./Search"
+import SignupForm from "./pages/Register"
+
 
 
 function NavBar() {
   return (
-    <nav className="NavBar">
-      <ul>
+    <nav className="NavBar"> NavBar
+    <div classname="container">
+      <div classname="logo">
+        <img src= "" alt=""/>
+      </div>
+      <div classname="links">links</div>
+    </div>
+      {/* <ul>
         <li>
-          <Link to="/">Home</Link>
+          <NavLink to="/" activeClassName="active">Home</NavLink>
         </li>
         <li>
-        <Link to="/oceans"> All Oceans </Link>
+          <NavLink to="/oceans" activeClassName="active">All Oceans</NavLink>
         </li>
         <li>
-        <Link to="/animals"> All Animals </Link>
+          <NavLink to="/animals" activeClassName="active">All Animals</NavLink>
         </li>
         <li>
-          <Link to="/user/new">Add User</Link>
+          <NavLink to="/favorites" activeClassName="active">Favorites</NavLink>
         </li>
         <li>
-          <Link to="/user/delete">Delete User</Link>
+          <NavLink to="/user/new" activeClassName="active">Add User</NavLink>
         </li>
-
-      </ul>
+        <li>
+          <NavLink to="/user/delete" activeClassName="active">Delete User</NavLink>
+        </li>
+        <li>
+          <NavLink to="/user/update" activeClassName="active">Update User</NavLink>
+        </li>
+      </ul> */}
     </nav>
   );
 }
