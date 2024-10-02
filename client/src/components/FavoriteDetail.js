@@ -27,8 +27,8 @@ const FavoritesList = () => {
                     <div className="animalimg">
                         <img src={favorite.img}/> {/* Assuming ocean.img contains the image URL */}
                     </div>
-                    <div className="animal-content">
-                        <Link className="animal-link" to={`/favorite/${favorite.id}`}>
+                    <div className="favorite-content">
+                        <Link className="favorite-link" to={`/favorite/${favorite.id}`}>
                             <h1>{favorite.name}</h1>
                         </Link>
                     </div>
