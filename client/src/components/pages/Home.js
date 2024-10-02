@@ -8,12 +8,12 @@ const Home = () => {
     useEffect(() => {
 		// this is how we communicate with flask
 		// by making fetch requests
-		fetch("http://127.0.0.1:5555/oceans")
+		fetch("http://localhost:5555/oceans")
 		.then(res => {
 			if(res.ok) {
 				return res.json()
 			} else {
-				console.error("fetch http://127.0.0.1:5555/oceans went wrong")
+				console.error("fetch http://localhost:5555/oceans went wrong")
 			}
 		})
 		.then(data => setOceans(data))
@@ -22,12 +22,12 @@ const Home = () => {
     useEffect(() => {
 		// this is how we communicate with flask
 		// by making fetch requests
-		fetch("http://127.0.0.1:5555/animals")
+		fetch("http://localhost:5555/animals")
 		.then(res => {
 			if(res.ok) {
 				return res.json()
 			} else {
-				console.error("fetch http://127.0.0.1:5555/animals went wrong")
+				console.error("fetch http://localhost:5555/animals went wrong")
 			}
 		})
 		.then(data => setAnimals(data))

@@ -5,7 +5,7 @@ const OceansPage = () => {
     const [oceans, setOceans] = useState([]);
 
     useEffect(() => {
-        fetch("http://127.0.0.1:5555/oceans")
+        fetch("http://localhost:5555/oceans")
             .then(res => {
                 if (!res.ok) {
                     throw new Error('Network response was not ok');

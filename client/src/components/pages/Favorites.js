@@ -71,7 +71,7 @@ function Favorites() {
                   onSave={handleSave} 
                   onDelete={handleDelete}
                 />
-                <Link to={`/animals/${favorite.id}`} >View Details</Link>
+                <Link to={`http://localhost:5555/favorites/${favorite.id}`} >View Details</Link>
               </li>
             ))}
           </ul>

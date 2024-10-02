@@ -20,7 +20,7 @@ function LoginForm({ onLogin }) {
 
     // Make a POST request to the backend login API
     axios
-      .post("http://127.0.0.1:5555/login", { username, password })
+      .post("http://localhost:5555/login", { username, password })
       .then((response) => {
         console.log("Login successful:", response.data);  // Log the successful login response
         onLogin(response.data);  // Handle the login success (e.g., store user info)

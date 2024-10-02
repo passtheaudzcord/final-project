@@ -5,7 +5,7 @@ const FavoritesList = () => {
     const [favorites, setFavorites] = useState([]);
 
     useEffect(() => {
-        fetch("http://127.0.0.1:5555/favorites")
+        fetch("http://localhost:5555/favorites")
             .then(res => {
                 if (!res.ok) {
                     throw new Error('Network response was not ok');
