@@ -1,36 +1,113 @@
-from flask import Flask, make_response, jsonify, request
+from flask import Flask, make_response, jsonify, request, session
 from flask_sqlalchemy import SQLAlchemy
+from flask_cors import CORS
 from flask_migrate import Migrate
 from flask_restful import Resource, Api
+from werkzeug.security import generate_password_hash, check_password_hash
 from models import Ocean, Animal, User, Favorite
 from config import db, api, app
+from werkzeug.exceptions import NotFound, UnprocessableEntity
+
+
+@app.before_request
+def before_request():
+    print('Session before request:', session)
+
+@app.after_request
+def after_request(response):
+    print('Session after request:', session.get('user_id'))
+    return response
 
 @app.route('/')
 def index():
     return '<h1>Hello World!</h1>'
+
+class RegisterForm(Resource):
+    def post(self):
+        data = request.get_json()
+        if not data or not data.get('username') or not data.get('password'):
+            return make_response({'message': 'Username and password required'}, 400)
+        
+        new_user = User(username=data['username'])
+        new_user.password_hash = data['password']
+        print(new_user.__dict__)
+        try:
+            db.session.add(new_user)
+            db.session.commit()
+            print(session)
+            session['user_id'] = new_user.id
+            return make_response(new_user.to_dict(), 201)
+        except Exception as e:
+            print(str(e))
+            return make_response({'message': str(e)}, 422)
+        
+
+class CheckSession(Resource):
+    def get(self):
+        user_id = session.get('user_id')
+        if user_id:
+            cur_user = User.query.get(user_id)
+            return make_response(cur_user.to_dict(), 200)
+        return make_response({'message': 'No one is logged in'}, 200)
+
+class Login(Resource):
+    def post(self):
+        data = request.get_json()
+        if not data or not data.get('username') or not data.get('password'):
+            return make_response({'message': 'Username and password required'}, 400)
+
+        user = User.query.filter_by(username=data.get('username')).first()
+        if not user:
+            return make_response({'message': 'No user with that username'}, 401)
+        
+        if check_password_hash(user.password_hash, data.get('password')):
+            session['user_id'] = user.id
+            return make_response(user.to_dict(), 200)
+        else:
+            return make_response({'message': 'Wrong password'}, 401)
+
+class Logout(Resource):
+    def delete(self):
+        session.pop('user_id', None)
+        return make_response({'message': 'User logged out'}, 200)
 
 class AllOceans(Resource):
     def get(self):
         oceans = Ocean.query.all()
         oceans_list = [ocean.to_dict(only=('id', 'name', 'avg_depth', 'deepest_point', 'surface_area', 'about', 'ofun_fact', 'img', 'map')) for ocean in oceans]
         return make_response(oceans_list, 200)
-    
+
 api.add_resource(AllOceans, '/oceans')
+
+@app.route('/oceans/<int:id>', methods=["GET"])
+def one_ocean(id):
+    ocean = Ocean.query.get(id)
+    if not ocean:
+        raise NotFound('Ocean not found')
+    return make_response(ocean.to_dict(), 200)
+
+@app.route('/animals/<int:id>', methods=["GET", "DELETE"])
+def one_animal(id):
+    animal = Animal.query.get(id)
+    if request.method == 'GET':
+        if not animal:
+            raise NotFound('Animal not found')
+        return make_response(animal.to_dict(), 200)
+
+    if request.method == "DELETE":
+        if not animal:
+            raise NotFound('Animal not found')
+        db.session.delete(animal)
+        db.session.commit()
+        return make_response('', 204)
 
 class AllAnimals(Resource):
     def get(self):
         animals = Animal.query.all()
-        animals_list = [animal.to_dict(only=('id', 'name', 'scientific_name', 'lifespan', 'about', 'fun_fact', 'food', 'img' )) for animal in animals]
+        animals_list = [animal.to_dict(only=('id', 'name', 'scientific_name', 'lifespan', 'about', 'fun_fact', 'food', 'img')) for animal in animals]
         return make_response(animals_list, 200)
 
 api.add_resource(AllAnimals, '/animals')
-
-class AllUsers(Resource):
-    def get(self):
-        users = User.query.all()
-        return make_response([{'id': user.id, 'username': user.username} for user in users], 200)
-          
-api.add_resource(AllUsers, '/users')
 
 class UserResource(Resource):
     def get(self, id):
@@ -41,7 +118,10 @@ class UserResource(Resource):
 
     def post(self):
         data = request.get_json()
-        new_user = User(username=data['username'], password_hash=data['password'])
+        if not data or not data.get('username') or not data.get('password'):
+            return make_response({'message': 'Username and password required'}, 400)
+        
+        new_user = User(username=data['username'], password_hash=generate_password_hash(data['password']))
         db.session.add(new_user)
         db.session.commit()
         return make_response({'id': new_user.id}, 201)
@@ -50,6 +130,7 @@ class UserResource(Resource):
         user = User.query.get(id)
         if user is None:
             return make_response({'message': 'User not found'}, 404)
+        
         data = request.get_json()
         for key, value in data.items():
             setattr(user, key, value)
@@ -63,16 +144,20 @@ class UserResource(Resource):
         db.session.delete(user)
         db.session.commit()
         return make_response('', 204)
-    
+
 api.add_resource(UserResource, '/users/<int:id>')
 
 class AllFavorites(Resource):
     def get(self):
         favs = Favorite.query.all()
-        favorites_list = [fav.to_dict(only=('id', 'user_id', 'animal_id' )) for fav in favs]
+        favorites_list = [fav.to_dict(only=('id', 'user_id', 'animal_id')) for fav in favs]
         return make_response(favorites_list, 200)
 
-api.add_resource(AllFavorites, '/favorites')
+api.add_resource(AllFavorites, '/favorites', endpoint='favorites')
+api.add_resource(RegisterForm, '/register', endpoint='register')
+api.add_resource(CheckSession, '/check_session', endpoint='check_session')
+api.add_resource(Login, '/login', endpoint='login')
+api.add_resource(Logout, '/logout', endpoint='logout')
 
 if __name__ == "__main__":
     app.run(port=5555, debug=True)

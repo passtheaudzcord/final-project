@@ -1,6 +1,13 @@
-import React from 'react'
+import React from 'react';
+import Logo from "./img/logo.png";
 
-function Footer() {
+const Footer = () => {
+    return (
+        <footer>
+            <img src={Logo} alt="" />
+            <span>Made to educate about Endemic Ocean Animals.</span>
+        </footer>
+    )
 
 }
 

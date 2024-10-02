@@ -49,17 +49,17 @@ class User(db.Model, SerializerMixin):
     favorite = db.relationship('Favorite', back_populates='users')
     serialize_rules = ('-user.favorites',)
 
-    @hybrid_property  # Getter
-    def password_hash(self):
-        raise AttributeError('password_hash is private')
+    # @hybrid_property  # Getter
+    # def password_hash(self):
+    #     raise AttributeError('password_hash is private')
     
-    @password_hash.setter
-    def password_hash(self, password):
-        password_hash = bcrypt.generate_password_hash(password.encode('utf-8'))
-        self._password_hash = password_hash.decode('utf-8')
+    # @password_hash.setter
+    # def password_hash(self, password):
+    #     password_hash = bcrypt.generate_password_hash(password.encode('utf-8'))
+    #     self._password_hash = password_hash.decode('utf-8')
 
-    def authenticate(self, password):
-        return bcrypt.check_password_hash(self._password_hash, password.encode('utf-8'))
+    # def authenticate(self, password):
+    #     return bcrypt.check_password_hash(self._password_hash, password.encode('utf-8'))
 
     @validates('username')
     def validate_username(self, key, value):
@@ -67,7 +67,7 @@ class User(db.Model, SerializerMixin):
             raise ValueError('Username must be at least 4 characters long.')
         return value
     
-    @validates('password')
+    @validates('password_hash')
     def validate_password(self, key, value):
         if len(value) < 5:
             raise ValueError('Password must be at least 5 characters long.')

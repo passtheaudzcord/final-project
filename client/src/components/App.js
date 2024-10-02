@@ -1,62 +1,88 @@
-import React from 'react';
+import React, { useEffect, useState } from "react";
+import { createBrowserRouter, RouterProvider, Outlet, BrowserRouter } from 'react-router-dom';
 import NavBar from "./NavBar";
-import { Route, Routes, NavLink, createBrowserRouter, RouterProvider, Router, Outlet } from 'react-router-dom'; 
-import Register from './pages/Register'
-import Login from './pages/Login'
-import About from './pages/About'
-import Favorites from './pages/Favorites'
-import Home from './pages/Home'
-import Footer from '../components/Footer'
-import './styles.scss'
+import RegisterForm from './RegisterForm';
+import Login from './pages/Login';
+import About from './pages/About';
+import Favorites from './pages/Favorites';
+import Home from './pages/Home';
+import Footer from '../components/Footer';
+import OceanDetail from "./OceansPage";
+import AnimalDetail from "./AnimalsPage";
+import './styles.scss';
 
-
-const Layout = () => {
+// Layout component
+const Layout = ({ user, setUser }) => {
     return (
         <>
-        <NavBar/>
-        <Outlet/>
-        <Footer/>
+            <NavBar user={user} setUser={setUser} />
+            <Outlet />
+            <Footer />
         </>
-    )
-} 
-
-const router = createBrowserRouter([
-    {
-        path: "/",
-        element: <Layout/>,
-        children:[
-            {
-                path:"/",
-                element: <Home/>
-            },
-            {
-                path:"/about",
-                element: <About/>
-            },
-            {
-                path:"/favorites",
-                element: <Favorites/>
-            },
-        ]
-    },
-    {
-        path: "/register",
-        element: <Register/>,
-    },
-    {
-        path: "/login",
-        element: <Login/>,
-    },
-])
+    );
+};
 
 function App() {
-  return (
-    <div className="App">
-        <div className="container">
-      <RouterProvider router = {router} />
-      </div>
-    </div>
-  );
+    const [user, setUser] = useState([]);
+    
+    useEffect(() => {
+        // Auto-login
+        fetch("/check_session").then((r) => {
+            if (r.ok) {
+                r.json().then((user) => setUser(user));
+            }
+        });
+    }, []);
+    
+    // Router definition moved outside to avoid potential re-renders
+    const router = createBrowserRouter([
+        {
+            path: "/",
+            element: <Layout user={user} setUser={setUser} />,
+            children: [
+                {
+                    path: "/",
+                    element: <Home />,
+                },
+                {
+                    path: "/about",
+                    element: <About />,
+                },
+                {
+                    path: "/favorites",
+                    element: <Favorites />,
+                },
+                {
+                    path: "/oceans",
+                    element: <OceanDetail />,
+                },
+                {
+                    path: "/animals",
+                    element: <AnimalDetail />,
+                }
+            ],
+        },
+        {
+            path: "/register",
+            element: <RegisterForm onLogin={setUser} />,
+        },
+        {
+            path: "/login",
+            element: <Login onLogin={setUser} />,
+        },
+    ]);
+    
+    if (!user) {
+        return <Login onLogin={setUser} />;
+    }
+
+    return (
+        <div className="App">
+            <div className="container">
+                <RouterProvider router={router} />
+            </div>
+        </div>
+    );
 }
 
 export default App;
