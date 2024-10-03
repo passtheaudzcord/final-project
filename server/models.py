@@ -54,12 +54,6 @@ class User(db.Model, SerializerMixin):
     favorites = db.relationship('Favorite', back_populates='user')
 
     serialize_rules = ('-favorites',)
-
-    # def set_password(self, password):
-    #     self._password_hash = generate_password_hash(password)
-
-    # def check_password(self, password):
-    #     return check_password_hash(self._password_hash, password)
     
     def create_user(username, password):
         new_user = User(username=username)
@@ -67,17 +61,6 @@ class User(db.Model, SerializerMixin):
         db.session.add(new_user)
         db.session.commit()
 
-    # def check_user_password_hash(username):
-    #     user = User.query.filter_by(username=username).first()
-    
-    #     if user is None:
-    #         print("User not found.")
-    #         return
-
-    #     if user._password_hash is not None:
-    #         print("Password hash exists.")
-    #     else:
-    #         print("Password hash is None.")
 
     # Username validation
     @validates('username')

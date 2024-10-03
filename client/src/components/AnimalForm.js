@@ -50,7 +50,7 @@ function AnimalForm({ addAnimal }) {
         about: '',
         lifespan: '',
         scientific_name: '',
-        name: ''
+        name: '',
       })
     })
     .catch(err => console.error('couldnt reach server'))

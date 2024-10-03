@@ -44,7 +44,6 @@ const AnimalsPage = () => {
                             <h1>{animal.name}</h1>
                         </Link>
                         <p>{animal.about}</p>
-                        <button onClick={() => <Link className="animal-link" to={`/animal/${animal.id}`}></Link>}>Learn More</button>
                         <button onClick={() => addToFavorites(animal)}>Favorite</button>
                     </div>
                 </div>

@@ -16,7 +16,7 @@ function NewAnimal() {
           {animals.map((animal, id) => (
             <li key={id}>
               {animal["animal-name"]}, {animal["scientific-name"]},
-              <img src={animal.image} />
+              <img src={animal.image} alt="" />
             </li>
           ))}
         </ul>

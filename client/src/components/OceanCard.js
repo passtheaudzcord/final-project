@@ -22,20 +22,14 @@ function OceanCard({ ocean, updateOcean, handleDelete }) {
 
   return (
     <div className="card">
-      <h2>{ocean.name}</h2>
-      <h3>{ocean.avg_depth}</h3>
-      <h4>{ocean.deepest_point}</h4>
-      <h4>{ocean.surface_area}</h4>
-      <h4>{ocean.fun_fact}</h4>
-      <h4>{ocean.about}</h4>
+      <h2>{ocean.name} Ocean </h2>
+      <h3><b>Average Depth: </b>{ocean.avg_depth}</h3>
+      <h4><b>Deepest Point: </b>{ocean.deepest_point}</h4>
+      <h4><b>Surface Area: </b>{ocean.surface_area}</h4>
+      <h4><b>Fun Fact: </b>{ocean.fun_fact}</h4>
+      <h4><b>About: </b>{ocean.about}</h4>
       <img src={ocean.img} alt={ocean.name} className="ocean-avatar" />
-      <h4>{ocean.map}</h4>
-      <button onClick={handleLike} className="like-btn">
-        Like {"<3"}
-      </button>
-      <button onClick={() => handleDelete(ocean.id)} className="del-btn">
-        Favorite
-      </button>
+      <img src={ocean.map} alt={ocean.name} className="ocean-map"/>
     </div>
   );
 }

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { NavLink, Navigate } from "react-router-dom";
 
 function Login({ onLogin }) {

@@ -33,7 +33,6 @@ const OceansPage = () => {
                             <h1>{ocean.name}</h1>
                         </Link>
                         <p>{ocean.about}</p>
-                        <button onClick={() => navigate(`/ocean/${ocean.id}`)}>Learn more</button>
                     </div>
                 </div>
             ))}

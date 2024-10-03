@@ -5,7 +5,7 @@ function Favorites() {
   const [favorites, setFavorites] = useState([]);
 
   useEffect(() => {
-    fetch("http://localhost:5555/animals")
+    fetch("http://localhost:5555/favorites")
       .then((res) => {
         if (res.ok) {
           return res.json();

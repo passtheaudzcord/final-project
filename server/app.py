@@ -190,6 +190,21 @@ class AllFavorites(Resource):
         favorites_list = [fav.to_dict(only=('id', 'user_id', 'animal_id')) for fav in favs]
         return make_response(favorites_list, 200)
 
+    def post(self):
+        data = request.get_json()  # Get the JSON data from the request
+        user_id = data.get('user_id')
+        animal_id = data.get('animal_id')
+
+        if not user_id or not animal_id:
+            return make_response({"error": "user_id and animal_id are required."}, 400)
+
+        # Create a new Favorite entry
+        new_favorite = Favorite(user_id=user_id, animal_id=animal_id)
+        db.session.add(new_favorite)
+        db.session.commit()
+
+        return make_response(new_favorite.to_dict(), 201)
+
 api.add_resource(AllFavorites, '/favorites', endpoint='favorites')
 api.add_resource(RegisterForm, '/register', endpoint='register')
 api.add_resource(CheckSession, '/check_session', endpoint='check_session')
