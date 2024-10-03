@@ -7,7 +7,7 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from models import Ocean, Animal, User, Favorite
 from config import db, api, app
 from werkzeug.exceptions import NotFound, UnprocessableEntity
-
+from flask_login import current_user, login_user, logout_user, LoginManager, login_required
 
 @app.before_request
 def before_request():
@@ -29,7 +29,7 @@ class RegisterForm(Resource):
             return make_response({'message': 'Username and password required'}, 400)
         
         new_user = User(username=data['username'])
-        new_user.password_hash = data['password']
+        new_user.password = data['password']
         print(new_user.__dict__)
         try:
             db.session.add(new_user)
@@ -51,21 +51,33 @@ class CheckSession(Resource):
         return make_response({'message': 'No one is logged in'}, 200)
 
 class Login(Resource):
+    
     def post(self):
         data = request.get_json()
+
         if not data or not data.get('username') or not data.get('password'):
             return make_response({'message': 'Username and password required'}, 400)
 
         user = User.query.filter_by(username=data.get('username')).first()
+
         if not user:
             return make_response({'message': 'No user with that username'}, 401)
-        
-        if check_password_hash(user.password_hash, data.get('password')):
-            session['user_id'] = user.id
-            return make_response(user.to_dict(), 200)
-        else:
-            return make_response({'message': 'Wrong password'}, 401)
+       
 
+# Register the Login resource with the API
+api.add_resource(Login, '/login', endpoint='login')
+
+@app.route('/current_user', methods=['GET'])
+def current_user():
+    # Check if the user is logged in
+    if 'user_id' in session:
+        user_id = session['user_id']
+        # Fetch user from the database based on user_id
+        user = User.query.get(user_id)  # Assuming you have a User model
+        if user:
+            return jsonify({'user': user.to_dict()}), 200  # Ensure to_dict() method exists
+    return jsonify({'user': None}), 404  # User not found or not logged in
+        
 class Logout(Resource):
     def delete(self):
         session.pop('user_id', None)
@@ -103,9 +115,34 @@ def one_animal(id):
 
 class AllAnimals(Resource):
     def get(self):
+        # Retrieve all animals from the database
         animals = Animal.query.all()
-        animals_list = [animal.to_dict(only=('id', 'name', 'scientific_name', 'lifespan', 'about', 'fun_fact', 'food', 'img')) for animal in animals]
+        # Convert the list of Animal objects to dictionaries
+        animals_list = [
+            animal.to_dict(only=('id', 'name', 'scientific_name', 'lifespan', 'about', 'fun_fact', 'food', 'img')) 
+            for animal in animals
+        ]
         return make_response(animals_list, 200)
+
+    def post(self):
+        # Get the JSON data from the request
+        data = request.get_json()
+        # Create a new Animal object with the provided data
+        new_animal = Animal(
+            name=data['name'],
+            scientific_name=data['scientific_name'],
+            lifespan=data['lifespan'],
+            about=data['about'],
+            fun_fact=data['fun_fact'],
+            food=data['food'],
+            img=data['img'],
+            ocean=data['ocean'], 
+        )
+        # Add the new animal to the database
+        db.session.add(new_animal)
+        db.session.commit()
+        
+        return make_response(new_animal.to_dict(), 201)
 
 api.add_resource(AllAnimals, '/animals')
 
@@ -156,7 +193,6 @@ class AllFavorites(Resource):
 api.add_resource(AllFavorites, '/favorites', endpoint='favorites')
 api.add_resource(RegisterForm, '/register', endpoint='register')
 api.add_resource(CheckSession, '/check_session', endpoint='check_session')
-api.add_resource(Login, '/login', endpoint='login')
 api.add_resource(Logout, '/logout', endpoint='logout')
 
 if __name__ == "__main__":

@@ -1,17 +1,20 @@
-import React from 'react';
+import React from "react";
+import NewAnimal from "./NewAnimal"
+import AnimalForm from "./AnimalForm"
 
-function Search({ search, updateSearch }) {
-  const handleChange = (e) => {
-    updateSearch(e.target.value);
-  };
-
+function Search({ search, updateSearch, addAnimal }) {
   return (
-    <input
-      type="text"
-      value={search}
-      onChange={handleChange}
-      placeholder="Search oceans or animals..."
-    />
+    <div className="searchbar">
+      <label htmlFor="search">Search Oceans and Endemic Animals:</label>
+      <input
+        value={search}
+        type="text"
+        id="search"
+        placeholder="Type a name to search..."
+        onChange={(e) => updateSearch(e.target.value)}
+      />
+      <AnimalForm addAnimal={addAnimal} />
+    </div>
   );
 }
 

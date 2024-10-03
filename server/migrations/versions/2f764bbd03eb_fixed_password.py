@@ -1,8 +1,8 @@
-"""initial migration
+"""fixed password
 
-Revision ID: 557e01b753d4
+Revision ID: 2f764bbd03eb
 Revises: 
-Create Date: 2024-09-23 11:03:24.685899
+Create Date: 2024-10-03 04:16:10.795690
 
 """
 from alembic import op
@@ -10,7 +10,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = '557e01b753d4'
+revision = '2f764bbd03eb'
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -32,9 +32,10 @@ def upgrade():
     )
     op.create_table('users',
     sa.Column('id', sa.Integer(), nullable=False),
-    sa.Column('username', sa.String(), nullable=True),
-    sa.Column('_password_hash', sa.String(), nullable=True),
-    sa.PrimaryKeyConstraint('id')
+    sa.Column('username', sa.String(), nullable=False),
+    sa.Column('password', sa.String(), nullable=False),
+    sa.PrimaryKeyConstraint('id'),
+    sa.UniqueConstraint('username')
     )
     op.create_table('animals',
     sa.Column('id', sa.Integer(), nullable=False),

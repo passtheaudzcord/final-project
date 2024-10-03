@@ -1,5 +1,6 @@
 from app import app
 from models import db, Ocean, Animal, User, Favorite # models go here
+from werkzeug.security import generate_password_hash
 from faker import Faker
 
 faker = Faker()
@@ -52,8 +53,8 @@ if __name__ == '__main__':
         animal20 = Animal(name='Antarctic Fur Seals', scientific_name = 'Arctocephalus gazella', lifespan='Female: 25 years, Male: 15 years', about='Antarctic Fur Seals were almost hunted to extinction. They weigh from 90-215 kg, males being larger. Male Antarctic fur seals are much larger than females, with males weighing up to four times more than females. Adult males are dark brown in colour. Females and juveniles tend to be paler, almost grey with lighter undersides. Colour patterns are highly variable, and scientists reported that some hybridization between Subantarctic and Antarctic fur seals has occurred.', fun_fact = 'A small percentage of Antarctic fur seals are born with a rare genetic mutation that causes them to have white or blonde fur. Also, Antarctic fur seals can move around on all fours and travel up to 12.5 miles per hour on land.', food = ' Krill, squid, fish, penguins.', ocean = ocean5, img= 'https://www.antarctica.gov.au/site/assets/files/45617/rs34085_nh_furseal_4.1920x768.jpg' )
 
 
-        user1 = User(username = 'achippy', _password_hash = '3564gfbd')
-        user2 = User(username = 'budweiser', _password_hash = 'mdnsjs7')
+        user1 = User(username = 'achippy', password = '3564gfbd')
+        user2 = User(username = 'budweiser', password = 'mdnsjs7')
 
         favorite1 = Favorite(user_id=1, animal_id=1)
         favorite2 = Favorite(user_id=1, animal_id=6)
@@ -66,9 +67,17 @@ if __name__ == '__main__':
             animal1, animal2, animal3, animal4, animal5, animal6, animal7, animal8, animal9, animal10,
             animal11, animal12, animal13, animal14, animal15, animal16, animal17, animal18, animal19, animal20,
             user1, user2,
-            favorite1, favorite2, favorite3, favorite4
         ])
 
+        db.session.commit()
+
+        favorite1 = Favorite(user_id=1, animal_id=1)
+        favorite2 = Favorite(user_id=1, animal_id=6)  # Ensure animal with ID 6 exists
+        favorite3 = Favorite(user_id=2, animal_id=19)  # Ensure animal with ID 19 exists
+        favorite4 = Favorite(user_id=2, animal_id=12)  # Ensure animal with ID 12 exists
+
+# Add and commit favorites
+        db.session.add_all([favorite1, favorite2, favorite3, favorite4])
         db.session.commit()
 
         print("Seeding complete!")

@@ -1,14 +1,14 @@
 import React, { useEffect, useState } from "react";
-import { createBrowserRouter, RouterProvider, Outlet, BrowserRouter } from 'react-router-dom';
+import { createBrowserRouter, RouterProvider, Outlet } from 'react-router-dom';
 import NavBar from "./NavBar";
 import RegisterForm from './RegisterForm';
 import Login from './pages/Login';
 import About from './pages/About';
-import Favorites from './pages/Favorites';
-import Home from './pages/Home';
+import Favorites from './Favorites';
+import Home from './Home';
 import Footer from '../components/Footer';
-import OceanDetail from "./OceansPage";
-import AnimalDetail from "./AnimalsPage";
+import OceansPage from "./OceansPage";
+import AnimalsPage from "./AnimalsPage";
 import './styles.scss';
 
 // Layout component
@@ -23,8 +23,10 @@ const Layout = ({ user, setUser }) => {
 };
 
 function App() {
-    const [user, setUser] = useState([]);
-    
+    const [user, setUser] = useState(null); // Initialize user as null
+    const [animals, setAnimals] = useState([]);
+    const [showForm, setShowForm] = useState(false);
+
     useEffect(() => {
         // Auto-login
         fetch("http://localhost:5555/check_session").then((r) => {
@@ -33,7 +35,7 @@ function App() {
             }
         });
     }, []);
-    
+
     // Router definition moved outside to avoid potential re-renders
     const router = createBrowserRouter([
         {
@@ -54,12 +56,12 @@ function App() {
                 },
                 {
                     path: "/oceans",
-                    element: <OceanDetail />,
+                    element: <OceansPage />,
                 },
                 {
                     path: "/animals",
-                    element: <AnimalDetail />,
-                }
+                    element: <AnimalsPage />,
+                },
             ],
         },
         {
@@ -71,10 +73,6 @@ function App() {
             element: <Login onLogin={setUser} />,
         },
     ]);
-    
-    if (!user) {
-        return <Login onLogin={setUser} />;
-    }
 
     return (
         <div className="App">
