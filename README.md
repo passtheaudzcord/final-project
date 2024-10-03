@@ -1,4 +1,15 @@
 OceanQuest
+## Before Running...
+## SERVER
+### Navigate into server file
+### Run pipenv install
+### Run the command "python app.py" to start the server
+
+## CLIENT
+### Open a new terminal and navigate into client file
+### Run npm install
+### Start Browser by using the command "npm start"
+
 ## A one sentence description of your app.
 ### OceanQuest is an app that lets you explore and identify marine life from oceans around the world with just a few taps.
 
