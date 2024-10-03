@@ -98,9 +98,10 @@ def one_ocean(id):
         raise NotFound('Ocean not found')
     return make_response(ocean.to_dict(), 200)
 
-@app.route('/animals/<int:id>', methods=["GET", "DELETE"])
+@app.route('/animals/<int:id>', methods=["GET", "DELETE", "PATCH"])
 def one_animal(id):
     animal = Animal.query.get(id)
+    
     if request.method == 'GET':
         if not animal:
             raise NotFound('Animal not found')
@@ -113,11 +114,39 @@ def one_animal(id):
         db.session.commit()
         return make_response('', 204)
 
+    if request.method == "PATCH":
+        if not animal:
+            raise NotFound('Animal not found')
+        
+        data = request.get_json()
+        
+        # Update the animal's attributes based on provided data
+        if 'name' in data:
+            animal.name = data['name']
+        if 'scientific_name' in data:
+            animal.scientific_name = data['scientific_name']
+        if 'lifespan' in data:
+            animal.lifespan = data['lifespan']
+        if 'about' in data:
+            animal.about = data['about']
+        if 'fun_fact' in data:
+            animal.fun_fact = data['fun_fact']
+        if 'food' in data:
+            animal.food = data['food']
+        if 'img' in data:
+            animal.img = data['img']
+        if 'ocean' in data:
+            ocean_instance = Ocean.query.get(data['ocean'])
+            if ocean_instance:
+                animal.ocean = ocean_instance  # Update the ocean if provided
+        
+        db.session.commit()
+        return make_response(animal.to_dict(), 200)
+
 class AllAnimals(Resource):
     def get(self):
         # Retrieve all animals from the database
         animals = Animal.query.all()
-        # Convert the list of Animal objects to dictionaries
         animals_list = [
             animal.to_dict(only=('id', 'name', 'scientific_name', 'lifespan', 'about', 'fun_fact', 'food', 'img')) 
             for animal in animals
@@ -127,6 +156,12 @@ class AllAnimals(Resource):
     def post(self):
         # Get the JSON data from the request
         data = request.get_json()
+        ocean_id = data.get('ocean')
+
+        ocean_instance = Ocean.query.get(ocean_id)
+        if not ocean_instance:
+            return make_response({'error': 'Ocean not found'}, 400)  # Use make_response here
+
         # Create a new Animal object with the provided data
         new_animal = Animal(
             name=data['name'],
@@ -136,14 +171,13 @@ class AllAnimals(Resource):
             fun_fact=data['fun_fact'],
             food=data['food'],
             img=data['img'],
-            ocean=data['ocean'], 
+            ocean=ocean_instance 
         )
+
         # Add the new animal to the database
         db.session.add(new_animal)
         db.session.commit()
-        
-        return make_response(new_animal.to_dict(), 201)
-
+        return make_response({'id': new_animal.id}, 201)
 api.add_resource(AllAnimals, '/animals')
 
 class UserResource(Resource):

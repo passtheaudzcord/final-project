@@ -1,5 +1,7 @@
 import { useEffect, useState } from "react";
 import AnimalList from "./AnimalList";
+import EditAnimal from './EditAnimal'; // Import your EditAnimal component
+import AnimalForm from "./AnimalForm";
 import OceanList from "./OceanList";
 import Search from "./Search";
 
@@ -40,15 +42,19 @@ function HomePage() {
 
   const updateSearch = (newSearch) => setSearch(newSearch);
 
+  const addAnimal = (newAnimal) => {
+    setAnimal((prevAnimals) => [...prevAnimals, newAnimal]);
+  };
+
   const filteredAnimals = animals.filter((curAnimal) => {
     return (
-      curAnimal.name.toLowerCase().includes(search.toLowerCase()) ||
-      curAnimal.scientific_name.toLowerCase().includes(search.toLowerCase())
+      (curAnimal.name && curAnimal.name.toLowerCase().includes(search.toLowerCase())) ||
+      (curAnimal.scientific_name && curAnimal.scientific_name.toLowerCase().includes(search.toLowerCase()))
     );
   });
-
+  
   const filteredOceans = oceans.filter((curOcean) => {
-    return curOcean.name.toLowerCase().includes(search.toLowerCase());
+    return curOcean.name && curOcean.name.toLowerCase().includes(search.toLowerCase());
   });
 
   function updateAnimalFavorite(updatedAnimal) {
@@ -103,7 +109,7 @@ function HomePage() {
     <>
       <h1>Endemic Ocean Animals</h1>
       <div>
-        <Search search={search} updateSearch={updateSearch} />
+      <Search search={search} updateSearch={updateSearch} addAnimal={addAnimal} />
         <AnimalList
           animals={filteredAnimals}
           updateFavorite={updateAnimalFavorite}
@@ -112,7 +118,9 @@ function HomePage() {
           showDeleteButton={true}
           hideFavoriteButton={false}
           isFavoritePage={false}
-        />
+          />
+        <AnimalForm 
+          addAnimal={addAnimal} />
         <OceanList
           oceans={filteredOceans}
           updateFavorite={updateOceanFavorite}

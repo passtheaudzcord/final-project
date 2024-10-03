@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 function AnimalCard({ 
     animal, 
@@ -14,7 +14,7 @@ function AnimalCard({
     const [favorite, setFavorite] = useState(animal.favorite);
 
     const toggleFavorite = (event) => {
-        event.preventDefault(); // Prevent default behavior if necessary
+        event.preventDefault();
         setFavorite((prev) => !prev);
     };
 
@@ -40,7 +40,7 @@ function AnimalCard({
     }, [favorite, animal.id, updateFavorite]);
 
     const handleRemoveFromFavorites = (event) => {
-        event.preventDefault(); // Prevent default behavior if necessary
+        event.preventDefault();
         fetch(`http://localhost:5555/animals/${animal.id}`, {
             method: "PATCH",
             headers: { "Content-Type": "application/json" },
@@ -57,7 +57,7 @@ function AnimalCard({
     };
 
     const handleDelete = (event) => {
-        event.preventDefault(); // Prevent default behavior if necessary
+        event.preventDefault();
         fetch(`http://localhost:5555/animals/${animal.id}`, {
             method: "DELETE",
         })
@@ -72,7 +72,7 @@ function AnimalCard({
     };
 
     const handleFavorite = (event) => {
-        event.preventDefault(); // Prevent default behavior if necessary
+        event.preventDefault();
         fetch("http://localhost:5555/favorites", {
             method: "POST",
             headers: {
@@ -101,7 +101,7 @@ function AnimalCard({
             <h4><b>About: </b>{animal.about}</h4>
             <h4><b>Fun Fact: </b>{animal.fun_fact}</h4>
             <h4><b>Food: </b>{animal.food}</h4>
-            <h4><b></b>{animal.ocean}</h4>
+            <h4><b>Ocean: </b>{animal.ocean}</h4>
             <img src={animal.img} alt={animal.name} className="animal-avatar" />
             <button onClick={toggleFavorite} className="favorite-button">
                 {favorite ? "Unfavorite" : "Favorite"}
@@ -111,9 +111,14 @@ function AnimalCard({
                     Remove from Favorites
                 </button>
             ) : (
-                <button onClick={handleDelete} className="del-btn">
-                    Delete
-                </button>
+                <div>
+                    <button onClick={handleDelete} className="del-btn">
+                        Delete
+                    </button>
+                    <button>
+                        <Link to={`/animals/edit/${animal.id}`}>Edit</Link>
+                    </button>
+                </div>
             )}
         </div>
     );

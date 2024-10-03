@@ -4,6 +4,7 @@ import NavBar from "./NavBar";
 import RegisterForm from './RegisterForm';
 import Login from './pages/Login';
 import About from './pages/About';
+import EditAnimal from './EditAnimal'
 import Favorites from './Favorites';
 import Home from './Home';
 import Footer from '../components/Footer';
@@ -61,6 +62,10 @@ function App() {
                 {
                     path: "/animals",
                     element: <AnimalsPage />,
+                },
+                {
+                    path: "/animals/edit/:id", // Add the edit route here
+                    element: <EditAnimal />, // Ensure this is your edit component
                 },
             ],
         },

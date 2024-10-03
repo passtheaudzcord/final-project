@@ -1,8 +1,6 @@
 from sqlalchemy_serializer import SerializerMixin
-from sqlalchemy.ext.hybrid import hybrid_property
-from werkzeug.security import generate_password_hash, check_password_hash
 from sqlalchemy.orm import validates
-from config import db, bcrypt  # Import db from config
+from config import db  # Import db from config
 
 class Ocean(db.Model, SerializerMixin):
     __tablename__ = "oceans"
@@ -18,8 +16,7 @@ class Ocean(db.Model, SerializerMixin):
     map = db.Column(db.String)
 
     # Relationship to Animal
-    animals = db.relationship('Animal', back_populates='ocean')
-
+    animals = db.relationship('Animal', back_populates='ocean')  # Use back_populates
 
 class Animal(db.Model, SerializerMixin):
     __tablename__ = "animals"
@@ -38,10 +35,11 @@ class Animal(db.Model, SerializerMixin):
 
     # Relationships
     favorites = db.relationship('Favorite', back_populates='animal')
-    ocean = db.relationship('Ocean', back_populates='animals')
+    ocean = db.relationship('Ocean', back_populates='animals')  # Use back_populates
 
     serialize_rules = ('-favorites',)  # Adjusted to reflect correct relationships
 
+    
 
 class User(db.Model, SerializerMixin):
     __tablename__ = "users"
@@ -54,13 +52,6 @@ class User(db.Model, SerializerMixin):
     favorites = db.relationship('Favorite', back_populates='user')
 
     serialize_rules = ('-favorites',)
-    
-    def create_user(username, password):
-        new_user = User(username=username)
-        new_user.set_password(password)
-        db.session.add(new_user)
-        db.session.commit()
-
 
     # Username validation
     @validates('username')
@@ -68,7 +59,6 @@ class User(db.Model, SerializerMixin):
         if len(value) < 4:
             raise ValueError('Username must be at least 4 characters long.')
         return value
-
 
 class Favorite(db.Model, SerializerMixin):
     __tablename__ = "favorites"
@@ -81,8 +71,3 @@ class Favorite(db.Model, SerializerMixin):
     animal = db.relationship('Animal', back_populates='favorites')
 
     serialize_rules = ('-user.favorites', '-animal.favorites',)
-
-    def create_favorite(user_id, animal_id):
-        favorite = Favorite(user_id=user_id, animal_id=animal_id)
-        db.session.add(favorite)
-        db.session.commit()
